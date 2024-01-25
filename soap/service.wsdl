@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <definitions> must be the root of the WSDL document -->
+<wsdl:definitions targetNamespace="http://tempuri.org/" 
+  xmlns:s="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" 
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+  xmlns:tns="http://tempuri.org/" 
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <!-- WSDL TYPES: definition of the data types that are used in the web service -->
+  <wsdl:types>
+
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+    <s:complexType name="Train">
+        <s:sequence>
+        <s:element name="id" type="xs:int"/>
+        <s:element name="train_name" type="xs:string"/>
+        <s:element name="departure_station" type="xs:string"/>
+        <s:element name="arrival_station" type="xs:string"/>
+        <s:element name="departure_time" type="xs:dateTime"/>
+        <s:element name="arrival_time" type="xs:dateTime"/>
+        <s:element name="created_at" type="xs:dateTime"/>
+        <s:element name="updated_at" type="xs:dateTime"/>
+        </s:sequence>
+        </s:complexType>
+
+      <s:element name="TrainMessageSplitterRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="departureStation" type="xs:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="arrivalStation" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="departureTime" type="s:dateTime"/>
+            <s:element minOccurs="0" maxOccurs="1" name="arrivalTime" type="s:dateTime"/>
+            <s:element minOccurs="0" maxOccurs="1" name="carriageClass" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="limit" type="s:integer"/>
+            <s:element minOccurs="0" maxOccurs="1" name="offset" type="s:integer"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TrainMessageSplitterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="result" type="tns:Train"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+
+    <s:element name="BookTrainMessageSplitterRequest">
+        <s:complexType>
+            <s:element minOccurs="0" maxOccurs="1" name="userId" type="xs:integer"/>
+            <s:element minOccurs="0" maxOccurs="1" name="trainId" type="s:integer"/>
+          <!-- Define the fields for BookTrainMessage parameters -->
+        </s:complexType>
+      </s:element>
+
+      <s:element name="BookTrainMessageSplitterResponse">
+        <s:complexType>
+          <s:sequence>
+             <s:element minOccurs="0" maxOccurs="unbounded" name="result" type="tns:Train"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+
+
+    </s:schema>
+  
+  </wsdl:types>
+  <!-- MESSAGES: defines the data being exchanged between the service and client -->
+
+    
+
+  
+  <wsdl:message name="TrainMessageSplitterSoapIn">
+    <wsdl:part name="parameters" element="tns:TrainMessageSplitterRequest"/>
+  </wsdl:message>
+  <wsdl:message name="TrainMessageSplitterSoapOut">
+    <wsdl:part name="parameters" element="tns:TrainMessageSplitterResponse"/>
+  </wsdl:message>
+
+    <!-- added request -->
+   <wsdl:message name="BookTrainMessageSplitterSoapIn">
+    <wsdl:part name="parameters" element="tns:BookTrainMessageSplitterRequest"/>
+  </wsdl:message>
+
+  <wsdl:message name="BookTrainMessageSplitterSoapOut">
+    <wsdl:part name="parameters" element="tns:BookTrainMessageSplitterResponse"/>
+  </wsdl:message>
+  <!-- PORT TYPES: defines the complete communication operation (one way/round trip) -->
+  <wsdl:portType name="TrainMessageSoapPort">
+    <!-- The operation name must be the same as the one specified in the service object -->
+    <wsdl:operation name="TrainMessage">
+      <wsdl:input message="tns:TrainMessageSplitterSoapIn"/>
+      <wsdl:output message="tns:TrainMessageSplitterSoapOut"/>
+    </wsdl:operation>
+
+<!-- added operation -->
+    <wsdl:operation name="BookTrainMessage">
+      <wsdl:input message="tns:BookTrainMessageSplitterSoapIn"/>
+      <wsdl:output message="tns:BookTrainMessageSplitterSoapOut"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+  <!-- BINDING: provides details on how a portType operation will actually be transmitted -->
+  <wsdl:binding name="TrainMessageSplitterServiceSoapBinding" type="tns:TrainMessageSoapPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="TrainMessage">
+      <soap:operation soapAction="TrainMessage" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    
+    <wsdl:operation name="BookTrainMessage">
+      <soap:operation soapAction="BookTrainMessage" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!-- SERVICE:  -->
+  <wsdl:service name="TrainMessageService">
+    <wsdl:port name="TrainMessageSoapPort" binding="tns:TrainMessageSplitterServiceSoapBinding">
+      <soap:address location="http://localhost:8000/wsdl"/>
+    </wsdl:port>
+  </wsdl:service>
+
+
+</wsdl:definitions>
