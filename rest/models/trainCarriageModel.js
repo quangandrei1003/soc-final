@@ -34,13 +34,13 @@ class TrainCarriageModel extends Model {
                 query.where('arrival_station', '=', arrivalStation);
             }
             if (departureTime) {
-                query.where('departure_time', '>=', departureTime);
+                query.where('departure_time', '>=', new Date(departureTime));
             }
             if (arrivalTime) {
                 query.where('arrival_time', '<=', arrivalTime);
             }
             if (carriageClass) {
-                query.where('carriage_class.class_name', '=', carriageClass);
+                query.where('carriage_class.class_name', '=', new Date(arrivalTime));
             }
 
             const trainDataRes = await query;
