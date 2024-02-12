@@ -9,10 +9,6 @@ class TrainModel extends Model {
             ...data
         });
     }
-    static async findByEmail(email) {
-        return this.table.where('email', '=', email);
-    }
-
     static async getTrainByFilter(data) {
 
 
@@ -53,18 +49,20 @@ class TrainModel extends Model {
 
             const trainDataRes = await query;
 
-            console.log(`length: ${trainDataRes.length}`);
-
             return trainDataRes;
         } catch (error) {
             console.log(error);
         }
     }
 
-
-    static async findUserById(id) {
-        const [user] = await this.table.where('id', '=', id).returning(['name', 'email', 'id', 'role']);
-        return user;
+    static async makeTrain(data) {
+        try {
+            const [result] = await this.table.insert(data).returning('*');
+            return result;
+        } catch (error) {
+            console.log(`make train error`);
+            console.log(error);
+        }
     }
 }
 

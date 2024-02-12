@@ -7,9 +7,16 @@ import matchPassword from '../utils/matchPassword.js';
 
 export const getAllUsers = asyncHandler(async (req, res) => {
     try {
-        const users = await UserModel.all();
+
+        let { limit, offset } = req.query;
+
+        limit = limit || 10;
+        offset = offset || 0;
+        const users = await UserModel.all({ limit: limit, offset: offset });
+
         res.json(users);
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             message: `Internal Server Error!`
         });
@@ -33,11 +40,8 @@ export const registerUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error('Empty password');
     }
-    console.log(`hello`);
 
     const userExists = await UserModel.findByEmail(email);
-
-    console.log(userExists);
 
     if (userExists.length) {
         res.status(400);
@@ -68,11 +72,14 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const authUser = asyncHandler(async (req, res) => {
-
-
     const { email, password } = req.body;
 
     const [user] = await UserModel.findByEmail(email);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
 
     const isPasswordMatch = await matchPassword(user.password, password);
 
@@ -87,8 +94,6 @@ export const authUser = asyncHandler(async (req, res) => {
         res.status(401);
         throw new Error('Invalid email or password');
     }
-
-
 })
 
 

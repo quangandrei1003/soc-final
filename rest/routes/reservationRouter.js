@@ -6,7 +6,6 @@ import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router({ mergeParams: true });
 
-
-router.route('/').post(makeReservation);
+router.route('/').post(protect, makeReservation);
 
 export default router;

@@ -12,17 +12,14 @@ soap.createClient(url, function (err, client) {
     * in the WSDL file
     */
     var args = {
-        message: 0,
-        splitter: ":"
+        message: `Paris`,
+        arrivalStation: `London`
     };
     // call the service
     client.TrainMessage(args, function (err, res) {
         if (err)
             throw err;
         // print the service returned result
-        console.log(`121111`);
-
-
         console.log(res);
     });
 });

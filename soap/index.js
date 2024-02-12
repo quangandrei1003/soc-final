@@ -3,11 +3,12 @@ import express from 'express';
 import fs from 'fs';
 import axios from 'axios';
 
-import { N0_TRAIN_AVAILABLE_MSG } from '../constants/message.js';
+import { N0_TRAIN_AVAILABLE_MSG, RESERVATION_AUTH_MESSAGE } from '../constants/message.js';
 
 
 async function handleFilterRequest(args) {
     console.log('handle filter train request');
+
 
     let trainFilterUrl = `http://localhost:5001/api/trains/carriages`;
     let queryParams = {
@@ -50,13 +51,22 @@ async function handleBookRequest(args) {
     requestBody = Object.fromEntries(
         Object.entries(requestBody).filter(([key, value]) => value !== undefined)
     );
+    const config = {
+        headers: {
+            Authorization: `Bearer ${args.token}`,
+        },
+    };
 
     try {
-        const reservationResponse = await axios.post(reservationUrl, requestBody);
+        const reservationResponse = await axios.post(reservationUrl, requestBody, config);
         return reservationResponse.data;
     } catch (error) {
         console.log(error);
         console.log(`reserve train error in soap service!`);
+        return {
+            ErrorCode: 401,
+            ErrorMessage: RESERVATION_AUTH_MESSAGE
+        };
     }
 
 

@@ -52,7 +52,7 @@ class TrainCarriageModel extends Model {
 
     static async getTrainAvailabilityByFilter(trainId) {
         try {
-            const selectedColumns = ['train_id', 'seating_capacity', 'class_name'];
+            const selectedColumns = ['train_id', 'available_seat', 'class_name'];
             const carriageInfo = await this.table.select(selectedColumns)
                 .join('carriage_class', 'train_carriage_availability.carriage_class_id', '=', 'carriage_class.id')
                 .where('train_id', '=', trainId);

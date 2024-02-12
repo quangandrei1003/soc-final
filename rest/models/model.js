@@ -12,8 +12,8 @@ class Model {
         return database(this.tableName);
     }
 
-    static async all() {
-        return this.table;
+    static async all({ limit = limit, offset = offset }) {
+        return this.table.limit(limit).offset(offset);
     }
 
     static async insert(data) {

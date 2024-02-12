@@ -5,7 +5,6 @@ import UserModel from '../models/userModel.js';
 
 const protect = asyncHandler(async (req, res, next) => {
     let token;
-
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
@@ -24,7 +23,6 @@ const protect = asyncHandler(async (req, res, next) => {
             throw new Error('Not authorized, token failed');
         }
     }
-
     if (!token) {
         res.status(401);
         throw new Error('Not authorized, no token');
